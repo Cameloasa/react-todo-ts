@@ -1,4 +1,3 @@
-
 # React Todos — Project Setup & Configuration
 
 This project is a React + TypeScript application built with Vite.  
@@ -148,3 +147,4 @@ npm run lint:fix
 npm run format
 npm run format:fix
 npm run fix
+```

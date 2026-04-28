@@ -1,4 +1,3 @@
-
 # Contributing Guidelines
 
 Thank you for contributing to this project!  
@@ -133,3 +132,4 @@ easy collaboration
 professional project structure
 
 Thank you for contributing!
+```
