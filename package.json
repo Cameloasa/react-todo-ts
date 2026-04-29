@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "server": "json-server --watch data/db.json --port 3000 --delay 1500",
+    "server": "json-server --watch data/db.json --port 3000 ",
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "format": "prettier . --check",
