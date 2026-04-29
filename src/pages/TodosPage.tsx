@@ -1,66 +1,90 @@
 import { useEffect, useState } from 'react'
 import ListGroup from 'react-bootstrap/ListGroup'
 import { PacmanLoader } from 'react-spinners'
+
+import AddTodo from '../components/AddTodo'
 import TodoListItem from '../components/TodoListItem'
+
 import * as TodosAPI from '../services/TodosAPI'
-import type { Todo } from '../types/TodosAPI.types'
+import type { Todo, CreateTodoPayload } from '../types/TodosAPI.types'
 
 const TodosPage = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const [todos, setTodos] = useState<Todo[] | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [todos, setTodos] = useState<Todo[]>([])
 
-  const toggleTodo = async (todo: Todo) => {
-    // set loading state
+  // Load todos from API
+  const loadTodos = async () => {
     setIsLoading(true)
-
-    // update todo in api
-    await TodosAPI.updateTodo(todo.id, { completed: !todo.completed })
-
-    // get new list of todos from api
-    const data = await TodosAPI.getTodos()
-    setTodos(data)
-
-    // reset loading state
-    setIsLoading(false)
+    await new Promise((resolve) => setTimeout(resolve, 500)) // Simulate API delay
+    try {
+      const data = await TodosAPI.getTodos()
+      setTodos(data)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  // Fetch todos when component is mounted (being rendered for the first time)
-  useEffect(() => {
-    const getTodos = async () => {
-      const data = await TodosAPI.getTodos()
+  // Create a new todo
+  const createTodo = async (payload: CreateTodoPayload) => {
+    setIsLoading(true)
+    try {
+      await TodosAPI.createTodo(payload)
+      await loadTodos()
+    } finally {
       setIsLoading(false)
-      setTodos(data)
     }
-    getTodos()
+  }
+
+  // Toggle completed state
+  const toggleTodo = async (todo: Todo) => {
+    setIsLoading(true)
+    try {
+      await TodosAPI.updateTodo(todo.id, {
+        completed: !todo.completed,
+      })
+      await loadTodos()
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Load todos on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      await loadTodos()
+    }
+
+    fetchData()
   }, [])
 
   return (
     <>
       <h1 className="mb-3">Todos</h1>
 
-      {/* Form should validate that a title is entered and at least 2 chars long, ONLY then should the parent's function for creating the todo be called */}
-      {/* <AddTodoForm onAdd={createTodo} /> */}
-
-      {/* <SuccessAlert heading="Great success!">
-				<ul>
-					<li>Such success</li>
-					<li>Much great</li>
-					<li>Very nice</li>
-				</ul>
-			</SuccessAlert> */}
-
+      {/* Loading spinner */}
       {isLoading && (
         <div id="loading-spinner-wrapper">
           <PacmanLoader size={30} color="#44f" speedMultiplier={1.25} />
         </div>
       )}
 
-      {todos && (
+      {/* Todo list */}
+      {!isLoading && todos.length > 0 && (
         <ListGroup className="todolist">
           {todos.map((todo) => (
-            <TodoListItem key={todo.id} onToggle={toggleTodo} todo={todo} />
+            <TodoListItem key={todo.id} todo={todo} onToggle={toggleTodo} />
           ))}
         </ListGroup>
+      )}
+
+      {/* Add new todo */}
+      <div className="mt-4">
+        <AddTodo onAdd={createTodo} />
+      </div>
+
+      {/* Empty state */}
+      {!isLoading && todos.length === 0 && (
+        <p className="text-muted">No todos yet. Use the form to add one.</p>
       )}
     </>
   )
