@@ -3,7 +3,7 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import { PacmanLoader } from 'react-spinners'
 import TodoListItem from '../components/TodoListItem'
 import * as TodosAPI from '../services/TodosAPI'
-import type { Todo } from '../services/TodosAPI.types'
+import type { Todo } from '../types/TodosAPI.types'
 
 const TodosPage = () => {
   const [isLoading, setIsLoading] = useState(true)
