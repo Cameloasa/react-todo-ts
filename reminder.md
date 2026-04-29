@@ -1,4 +1,3 @@
-
 # basename in React Router (Router)
 
 tsx

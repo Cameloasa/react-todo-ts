@@ -1,6 +1,6 @@
 import { api } from './api'
 
-import type { CreateTodoPayload, Todo, UpdateTodoPayload } from '../types/Todo'
+import type { CreateTodoPayload, Todo, UpdateTodoPayload } from '../types/TodosAPI.types'
 
 /**
  * Make a generic HTTP GET request
